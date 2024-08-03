@@ -1,34 +1,60 @@
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "@/constants/Colors";
+import { router } from "expo-router";
+import * as SecureStore from "expo-secure-store";
+import { Redirect } from "expo-router";
 
 export default function index() {
+  const [isShowSplashScreen, setIsShowSplashScreen] = useState(null);
+
+  useEffect(() => {
+    const checkIsSet = async () => {
+      const value = await SecureStore.getItemAsync("isSet");
+      setIsShowSplashScreen(value === null);
+    };
+    checkIsSet();
+  }, []);
+
+  const navigateHome = async () => {
+    await SecureStore.setItemAsync("isSet", "true");
+    router.push("home");
+  };
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.Container}>
-        <View style={styles.c1}>
-          <Image
-            source={require("../assets/images/onBoarding.png")}
-            style={styles.onBoardingImage}
-          />
-        </View>
-        <View style={styles.c2}>
-          <Text style={styles.title}>
-            Your {"\n"} <Text style={styles.titleBold}>Financial</Text> {"\n"}{" "}
-            Navigator
-          </Text>
-          <Text style={styles.desc}>
-            Invest in projects that make a difference. Join us in supporting the impactful initiatives and create a positive change in the world.
-          </Text>
-        </View>
-        <View style={styles.c3}>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Get Started</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </SafeAreaView>
+    <>
+      {!isShowSplashScreen ? (
+        <Redirect href="/home" />
+      ) : (
+        <SafeAreaView style={styles.safeArea}>
+          <View style={styles.Container}>
+            <View style={styles.c1}>
+              <Image
+                source={require("../assets/images/onBoarding.png")}
+                style={styles.onBoardingImage}
+              />
+            </View>
+            <View style={styles.c2}>
+              <Text style={styles.title}>
+                Your {"\n"} <Text style={styles.titleBold}>Financial</Text>{" "}
+                {"\n"} Navigator
+              </Text>
+              <Text style={styles.desc}>
+                Invest in projects that make a difference. Join us in supporting
+                the impactful initiatives and create a positive change in the
+                world.
+              </Text>
+            </View>
+            <View style={styles.c3}>
+              <TouchableOpacity onPress={navigateHome} style={styles.button}>
+                <Text style={styles.buttonText}>Get Started</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </SafeAreaView>
+      )}
+    </>
   );
 }
 
@@ -99,7 +125,7 @@ const styles = new StyleSheet.create({
     color: "#5c5b57",
     fontFamily: "SFProRegular",
   },
-  button:{
+  button: {
     width: "100%",
     height: 50,
     backgroundColor: "#000",

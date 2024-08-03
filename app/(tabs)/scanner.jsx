@@ -19,7 +19,7 @@ export default function home() {
           backgroundColor: Colors.grey,
         }}
       >
-        <Text>stat</Text>
+        <Text>scanner</Text>
       </View>
     </SafeAreaView>
   );
