@@ -4,4 +4,5 @@ export const Colors = {
   grey: "#EFEFEF",
   black: "#171717",
   onBoardingBackground: "#FBFBFC",
+  text: "#242424",
 };
