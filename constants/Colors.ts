@@ -5,4 +5,6 @@ export const Colors = {
   black: "#171717",
   onBoardingBackground: "#FBFBFC",
   text: "#242424",
+  homeBackground: "#FAFCFD",
+  greyText: "#737373",
 };

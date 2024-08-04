@@ -1,8 +1,5 @@
-import { Stack, Tabs } from "expo-router";
-import home from "./home";
-import { View, Text, Image } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { Colors } from "../../constants/Colors";
+import { Tabs } from "expo-router";
+import { View, Image } from "react-native";
 import homeIcon from "../../assets/images/home.png";
 import homeDark from "../../assets/images/home-dark.png";
 import scannerIcon from "../../assets/images/scanner.png";
@@ -17,16 +14,18 @@ export default function tabLayout() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          marginBottom: 30,
+          // marginBottom: 30,
+          position: "absolute",
+          bottom: 50,
+          left:"27%",
+          right: "28%",
           width: "45%",
           alignSelf: "center",
           backgroundColor: "#fff",
           borderRadius: 16,
           justifyContent: "center",
           alignItems: "center",
-          shadowOpacity: 0.0,
-          shadowRadius: 0.0,
-          shadowColor: "transparent",
+          zIndex: 100,
         },
       }}
     >

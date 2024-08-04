@@ -68,6 +68,7 @@ const styles = new StyleSheet.create({
   Container: {
     flex: 1,
     backgroundColor: "#fff",
+    // backgroundColor: Colors.onBoardingBackground,
   },
   c1: {
     display: "flex",
