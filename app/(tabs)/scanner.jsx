@@ -1,26 +1,122 @@
-import { View, Text } from "react-native";
-import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useState, useEffect } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  Button,
+  TouchableOpacity,
+  Linking,
+} from "react-native";
+import { Camera, CameraView } from "expo-camera";
+import { useRef, useCallback, useMemo } from "react";
+import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { Colors } from "../../constants/Colors";
 
-export default function home() {
+export default function App() {
+  const [hasPermission, setHasPermission] = useState(null);
+  const [scanned, setScanned] = useState(false);
+  const [scannedData, setScannedData] = useState("");
+  const [link, setLink] = useState(null);
+  const bottomSheetModalRef = useRef(null);
+
+  const snapPoints = useMemo(() => ["39%"], []);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      setHasPermission(status === "granted");
+    })();
+  }, []);
+
+  const extractLink = (data) => {
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    const urls = data.match(urlRegex);
+    if (urls) {
+      setLink(urls[0]);
+      return data.replace(urls[0], "").trim();
+    }
+    return data;
+  };
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true);
+    setScannedData(data);
+    handlePresentModalPress();
+    extractLink(data);
+  };
+
+  if (hasPermission === null) {
+    return <Text>Requesting for camera permission</Text>;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: "#000",
-      }}
-    >
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: Colors.grey,
-        }}
+    <View style={styles.container}>
+      <CameraView
+        onBarcodeScanned={scanned ? undefined : handleBarCodeScanned}
+        style={styles.camera}
       >
-        <Text>scanner</Text>
-      </View>
-    </SafeAreaView>
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={0}
+          snapPoints={snapPoints}
+          onDismiss={() => {
+            setLink(null), setScanned(false);
+          }}
+        >
+          <BottomSheetView style={styles.bottomSheet}>
+            <Text>Scanned Data : {scannedData}</Text>
+            {link && (
+              <TouchableOpacity
+                style={styles.buttonModal}
+                onPress={() => Linking.openURL(link)}
+              >
+                <Text style={styles.buttonModalText}>Open Link</Text>
+              </TouchableOpacity>
+            )}
+          </BottomSheetView>
+        </BottomSheetModal>
+      </CameraView>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  message: {
+    textAlign: "center",
+    paddingBottom: 10,
+  },
+  camera: {
+    flex: 1,
+  },
+  bottomSheet: {
+    flex: 1,
+    backgroundColor: Colors.homeBackground,
+    paddingTop: 10,
+    paddingHorizontal: 20,
+    justifyContent: "space-between",
+  },
+  buttonModal: {
+    height: 50,
+    backgroundColor: "#000",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  buttonModalText: {
+    fontSize: 16,
+    fontFamily: "SFProMedium",
+    color: "#fff",
+  },
+});

@@ -36,6 +36,7 @@ export default function Home() {
   });
   const [persistedData, setPersistedData] = useState([]);
   const [errors, setErrors] = useState({});
+   const bottomSheetModalRef = useRef(null);
 
   const handleChange = (name, value) => {
     setTransaction({
@@ -98,8 +99,6 @@ export default function Home() {
     );
     setPersistedData(newTransactions);
   };
-
-  const bottomSheetModalRef = useRef(null);
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetModalRef.current?.present();
