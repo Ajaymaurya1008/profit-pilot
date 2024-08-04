@@ -14,7 +14,6 @@ export default function tabLayout() {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarStyle: {
-          // marginBottom: 30,
           position: "absolute",
           bottom: 50,
           left:"27%",
@@ -25,7 +24,7 @@ export default function tabLayout() {
           borderRadius: 16,
           justifyContent: "center",
           alignItems: "center",
-          zIndex: 100,
+          zIndex: 10,
         },
       }}
     >

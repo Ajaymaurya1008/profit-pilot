@@ -1,30 +1,24 @@
 export const transactionData = [
   {
-    id: "1",
+    id: 1000,
     type: "Transfer",
     to: "Firmansyah A.",
     amount: -20,
-    currency: "USD",
     time: "04:03 PM",
-    date: "Today",
   },
   {
-    id: "2",
+    id: 10001,
     type: "Receive",
     from: "Adam S.",
     amount: 1300,
-    currency: "USD",
     time: "02:15 PM",
-    date: "Today",
   },
   {
-    id: "3",
+    id: 10002,
     type: "Transfer",
-    to: "Unknown",
+    to: "Mr Khan",
     amount: -20,
-    currency: "USD",
     time: "04:03 PM",
-    date: "Today",
   },
 ];
 

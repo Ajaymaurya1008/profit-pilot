@@ -5,18 +5,127 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
-import React from "react";
+import React, {
+  useRef,
+  useCallback,
+  useMemo,
+  useState,
+  useEffect,
+} from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "../../constants/Colors";
 import Feather from "@expo/vector-icons/Feather";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { transactionData, cardData } from "../../constants/Data";
 import TransactionItem from "../../components/Home/TransactionItem";
 import Card from "../../components/Home/Card";
+import {
+  BottomSheetModal,
+  BottomSheetView,
+  BottomSheetTextInput,
+} from "@gorhom/bottom-sheet";
+import * as SecureStore from "expo-secure-store";
 
 export default function Home() {
+  const [transaction, setTransaction] = useState({
+    amount: "",
+    person: "",
+    account: "",
+  });
+  const [persistedData, setPersistedData] = useState([]);
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (name, value) => {
+    setTransaction({
+      ...transaction,
+      [name]: value,
+    });
+  };
+
+  const validate = () => {
+    const newErrors = {};
+    if (!transaction.amount) {
+      newErrors.amount = "Amount is required";
+    } else if (isNaN(transaction.amount) || Number(transaction.amount) <= 0) {
+      newErrors.amount = "Amount must be a number greater than zero";
+    }
+    if (!transaction.person) newErrors.person = "Person name is required";
+    if (!transaction.account) {
+      newErrors.account = "Account number is required";
+    } else if (isNaN(transaction.account) || Number(transaction.account) <= 0) {
+      newErrors.account = "Account number must be numeric";
+    }
+    return newErrors;
+  };
+
+  const formatTime = (date) => {
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    const ampm = hours >= 12 ? "PM" : "AM";
+    hours = hours % 12;
+    hours = hours ? hours : 12;
+    const strMinutes = minutes < 10 ? "0" + minutes : minutes;
+    return hours + ":" + strMinutes + " " + ampm;
+  };
+
+  const handleSendMoney = async () => {
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+    setErrors({});
+    const transactionItem = {
+      ...transaction,
+      amount: -Number(transaction.amount),
+      time: formatTime(new Date()),
+      id: Math.floor(Math.random() * 1000000),
+      currency: "USD",
+      type: "Transfer",
+      to: transaction.person,
+    };
+    console.log(transactionItem);
+    bottomSheetModalRef.current?.dismiss();
+    let transactions = await SecureStore.getItemAsync("transactions");
+    console.log("string form", transactions);
+    transactions = transactions && JSON.parse(transactions);
+    const newTransactions = [transactionItem, ...transactions];
+    await SecureStore.setItemAsync(
+      "transactions",
+      JSON.stringify(newTransactions)
+    );
+    setPersistedData(newTransactions);
+  };
+
+  const bottomSheetModalRef = useRef(null);
+
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+
+  const snapPoints = useMemo(() => ["39%"], []);
+
+  useEffect(() => {
+    const getTransactions = async () => {
+      let transactions = await SecureStore.getItemAsync("transactions");
+      transactions = JSON.parse(transactions);
+      console.log("transactions from expo", transactions);
+      if (transactions === null || transactions.length === 0) {
+        await SecureStore.setItemAsync(
+          "transactions",
+          JSON.stringify(transactionData)
+        );
+        setPersistedData(transactionData);
+      } else {
+        setPersistedData(transactions);
+      }
+      // await SecureStore.deleteItemAsync("transactions");
+    };
+    getTransactions();
+  }, []);
+
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
@@ -46,7 +155,10 @@ export default function Home() {
             <Feather name="arrow-down-left" size={24} color="black" />
             <Text style={styles.buttonText}>Request</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity
+            onPress={handlePresentModalPress}
+            style={styles.button}
+          >
             <Feather name="arrow-up-right" size={24} color="black" />
             <Text style={styles.buttonText}>Transfer</Text>
           </TouchableOpacity>
@@ -62,11 +174,44 @@ export default function Home() {
           </View>
           <Text style={styles.c4HeaderToday}>TODAY</Text>
           <FlatList
-            data={transactionData}
+            data={persistedData}
             renderItem={({ item }) => <TransactionItem item={item} />}
             horizontal={false}
+            keyExtractor={(item) => item.id.toString()}
+            scrollEnabled={true}
+            showsVerticalScrollIndicator={false}
           />
         </View>
+        <BottomSheetModal
+          ref={bottomSheetModalRef}
+          index={0}
+          snapPoints={snapPoints}
+          // handleComponent={null
+        >
+          <BottomSheetView style={styles.bottomSheet}>
+            <BottomSheetTextInput
+              placeholder="Enter person name"
+              style={[styles.input, errors.person && styles.inputError]}
+              onChangeText={(text) => handleChange("person", text)}
+            />
+            <BottomSheetTextInput
+              placeholder="Enter Account number"
+              style={[styles.input, errors.account && styles.inputError]}
+              onChangeText={(text) => handleChange("account", text)}
+            />
+            <BottomSheetTextInput
+              placeholder="Enter amount"
+              style={[styles.input, errors.amount && styles.inputError]}
+              onChangeText={(text) => handleChange("amount", text)}
+            />
+            <TouchableOpacity
+              style={styles.buttonModal}
+              onPress={handleSendMoney}
+            >
+              <Text style={styles.buttonModalText}>Send Money</Text>
+            </TouchableOpacity>
+          </BottomSheetView>
+        </BottomSheetModal>
       </View>
     </SafeAreaView>
   );
@@ -179,99 +324,6 @@ const styles = StyleSheet.create({
     textAlign: "left",
     marginBottom: 10,
   },
-  card: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 6,
-    alignItems: "flex-start",
-    borderRadius: 20,
-    padding: 20,
-    marginRight: 15,
-    width: 250,
-    height: 220,
-  },
-  cardHeader: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-  },
-  flagContainer: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#fff",
-    padding: 6,
-    borderRadius: 25,
-  },
-  flag: {
-    width: 20,
-    height: 20,
-    marginRight: 5,
-    borderRadius: 50,
-  },
-  currency: {
-    fontSize: 10,
-    fontFamily: "SFProBold",
-    color: "#000",
-  },
-  cardType: {
-    width: 40,
-    height: 40,
-  },
-  balanceLabel: {
-    fontSize: 14,
-    fontFamily: "SFProRegular",
-    color: "#fff",
-    marginTop: 15,
-  },
-  label: {
-    fontSize: 12,
-    fontFamily: "SFProRegular",
-    color: "#fff",
-    marginTop: 15,
-  },
-  balanceContainer: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 20,
-    alignItems: "center",
-  },
-  balance: {
-    fontSize: 28,
-    fontFamily: "SFProMedium",
-    color: "#000",
-  },
-  eye: {
-    width: 35,
-    height: 35,
-    backgroundColor: "#ABE7FC",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 50,
-    borderWidth: 1,
-    borderColor: "#fff",
-  },
-  cardFooter: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    width: "100%",
-    marginTop: 10,
-  },
-  accountNumber: {
-    fontSize: 14,
-    fontFamily: "SFProMedium",
-    color: "#000",
-  },
-  validThru: {
-    fontSize: 14,
-    fontFamily: "SFProMedium",
-    color: "#000",
-  },
   c4: {
     display: "flex",
     flexDirection: "column",
@@ -282,7 +334,8 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     backgroundColor: "#fff",
-    height: "100%",
+    // height: "100%",
+    flex: 1,
   },
   c4Header: {
     display: "flex",
@@ -307,5 +360,44 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "SFProMedium",
     color: "#C1CAD5",
+  },
+  bottomSheet: {
+    flex: 1,
+    backgroundColor: Colors.homeBackground,
+  },
+  input: {
+    marginHorizontal: 20,
+    marginTop: 8,
+    marginBottom: 10,
+    borderRadius: 10,
+    fontSize: 16,
+    lineHeight: 20,
+    padding: 8,
+    backgroundColor: Colors.grey,
+    borderWidth: 1,
+    borderColor: "transparent",
+  },
+  buttonModal: {
+    height: 50,
+    backgroundColor: "#000",
+    borderRadius: 10,
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: 20,
+    marginTop: 10,
+  },
+  buttonModalText: {
+    fontSize: 16,
+    fontFamily: "SFProMedium",
+    color: "#fff",
+  },
+  errorText: {
+    color: "red",
+    marginHorizontal: 20,
+    marginTop: -8,
+    marginBottom: 8,
+  },
+  inputError: {
+    borderColor: "red",
   },
 });

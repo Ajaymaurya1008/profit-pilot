@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 
 const TransactionItem = ({ item }) => {
-  const { type, to, from, amount, currency, time } = item;
+  // console.log(item.to)
+  const { type, to, from, amount, time } = item;
   const isPositive = amount > 0;
 
   return (
