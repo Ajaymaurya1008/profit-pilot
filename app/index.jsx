@@ -12,10 +12,16 @@ export default function index() {
   useEffect(() => {
     const checkIsSet = async () => {
       const value = await SecureStore.getItemAsync("isSet");
-      setIsShowSplashScreen(value === null);
+      console.log("value", value);
+      setIsShowSplashScreen(value ? false : true);
+      // await SecureStore.deleteItemAsync("isSet");
     };
     checkIsSet();
   }, []);
+
+  if (isShowSplashScreen === null) {
+    return null;
+  }
 
   const navigateHome = async () => {
     await SecureStore.setItemAsync("isSet", "true");
@@ -24,9 +30,7 @@ export default function index() {
 
   return (
     <>
-      {!isShowSplashScreen ? (
-        <Redirect href="/home" />
-      ) : (
+      {isShowSplashScreen ? (
         <SafeAreaView style={styles.safeArea}>
           <View style={styles.Container}>
             <View style={styles.c1}>
@@ -53,6 +57,8 @@ export default function index() {
             </View>
           </View>
         </SafeAreaView>
+      ) : (
+        <Redirect href="/home" />
       )}
     </>
   );

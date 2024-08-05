@@ -6,6 +6,8 @@ import {
   FlatList,
   TouchableOpacity,
   ScrollView,
+  Keyboard,
+  TextInput,
 } from "react-native";
 import React, {
   useRef,
@@ -36,7 +38,8 @@ export default function Home() {
   });
   const [persistedData, setPersistedData] = useState([]);
   const [errors, setErrors] = useState({});
-   const bottomSheetModalRef = useRef(null);
+  const bottomSheetModalRef = useRef(null);
+  const isBottomSheetOpen = useRef(false);
 
   const handleChange = (name, value) => {
     setTransaction({
@@ -101,10 +104,11 @@ export default function Home() {
   };
 
   const handlePresentModalPress = useCallback(() => {
+    isBottomSheetOpen.current = true;
     bottomSheetModalRef.current?.present();
   }, []);
 
-  const snapPoints = useMemo(() => ["39%"], []);
+  const snapPoints = useMemo(() => ["39%", "78%"], []);
 
   useEffect(() => {
     const getTransactions = async () => {
@@ -123,6 +127,25 @@ export default function Home() {
       // await SecureStore.deleteItemAsync("transactions");
     };
     getTransactions();
+  }, []);
+
+  React.useEffect(() => {
+    let keyboardHideListener = Keyboard.addListener("keyboardDidHide", () => {
+      if (isBottomSheetOpen.current) {
+        bottomSheetModalRef.current?.snapToIndex(0);
+      }
+    });
+
+    let keyboardShowListener = Keyboard.addListener("keyboardDidShow", () => {
+      if (isBottomSheetOpen.current) {
+        bottomSheetModalRef.current?.snapToIndex(1);
+      }
+    });
+
+    return () => {
+      keyboardHideListener.remove();
+      keyboardShowListener.remove();
+    };
   }, []);
 
   return (
@@ -185,20 +208,23 @@ export default function Home() {
           ref={bottomSheetModalRef}
           index={0}
           snapPoints={snapPoints}
+          onDismiss={() => {
+            isBottomSheetOpen.current = false;
+          }}
           // handleComponent={null
         >
           <BottomSheetView style={styles.bottomSheet}>
-            <BottomSheetTextInput
+            <TextInput
               placeholder="Enter person name"
               style={[styles.input, errors.person && styles.inputError]}
               onChangeText={(text) => handleChange("person", text)}
             />
-            <BottomSheetTextInput
+            <TextInput
               placeholder="Enter Account number"
               style={[styles.input, errors.account && styles.inputError]}
               onChangeText={(text) => handleChange("account", text)}
             />
-            <BottomSheetTextInput
+            <TextInput
               placeholder="Enter amount"
               style={[styles.input, errors.amount && styles.inputError]}
               onChangeText={(text) => handleChange("amount", text)}
