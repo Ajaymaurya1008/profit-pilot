@@ -5,7 +5,6 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
-  ScrollView,
   Keyboard,
   TextInput,
 } from "react-native";
@@ -29,6 +28,7 @@ import {
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
 import * as SecureStore from "expo-secure-store";
+import { router } from "expo-router";
 
 export default function Home() {
   const [transaction, setTransaction] = useState({
@@ -192,7 +192,9 @@ export default function Home() {
         <View style={styles.c4}>
           <View style={styles.c4Header}>
             <Text style={styles.c4HeaderText}>Transaction</Text>
-            <Text style={styles.c4HeaderText2}>View all</Text>
+            <TouchableOpacity onPress={() => router.push("transactions")}>
+              <Text style={styles.c4HeaderText2}>View all</Text>
+            </TouchableOpacity>
           </View>
           <Text style={styles.c4HeaderToday}>TODAY</Text>
           <FlatList
