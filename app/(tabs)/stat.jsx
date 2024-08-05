@@ -4,16 +4,74 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Colors } from "../../constants/Colors";
 import Card from "../../components/Home/Card";
 import { cardData, months } from "../../constants/Data";
-import { useState } from "react";
+import { LineChart } from "react-native-chart-kit";
+import { Dropdown } from "react-native-element-dropdown";
 
 export default function Statistic() {
   const [month, setMonth] = useState(1);
+  const [value, setValue] = useState(0);
+
+  const data = [
+    { label: "Earnings", value: "0" },
+    { label: "Expenses", value: "1" },
+    { label: "Savings", value: "2" },
+  ];
+
+  const renderDotContent = ({ x, y, index, indexData }) => {
+    return (
+      <View
+        key={index}
+        style={{
+          position: "absolute",
+          top: y - 24,
+          left: x - 20,
+          width: 40,
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            color: Colors.black,
+            fontSize: 10,
+            fontFamily: "SFProMedium",
+          }}
+        >
+          ${indexData.toFixed(2)}
+        </Text>
+      </View>
+    );
+  };
+
+  const renderItem = (item) => {
+    return (
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: 5,
+        }}
+      >
+        <Text
+          style={{
+            fontSize: 10,
+            fontFamily: "SFProMedium",
+            color: Colors.black,
+          }}
+        >
+          {item.label}
+        </Text>
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.safeArea}>
@@ -50,7 +108,137 @@ export default function Statistic() {
             keyExtractor={(item) => item.id.toString()}
           />
         </View>
-        <View></View>
+        <View
+          style={{
+            display: "flex",
+            alignItems: "center",
+            flexDirection: "column",
+            width: "100%",
+            backgroundColor: "#fff",
+            borderRadius: 16,
+            borderColor: "#000",
+            marginTop: 20,
+            marginHorizontal: 15,
+          }}
+        >
+          <View
+            style={{
+              display: "flex",
+              width: "100%",
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 20,
+                fontFamily: "SFProMedium",
+                color: Colors.black,
+                marginTop: 15,
+                marginLeft: 20,
+                marginBottom: 10,
+              }}
+            >
+              Transactions
+            </Text>
+            <View
+              style={{
+                backgroundColor: "#F6F6F6",
+                height: 30,
+                borderRadius: 25,
+                marginRight: 10,
+                marginTop: 10,
+                borderColor: "#000",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                paddingHorizontal: 10,
+              }}
+            >
+              <Dropdown
+                style={{
+                  height: 30,
+                  width: 65,
+                  fontSize: 8,
+                  fontFamily: "SFProMedium",
+                  borderRadius: 15,
+                  borderColor: "#000",
+                  alignItems: "center",
+                }}
+                placeholderStyle={{
+                  fontSize: 10,
+                  fontFamily: "SFProMedium",
+                  color: Colors.black,
+                }}
+                selectedTextStyle={{
+                  fontSize: 10,
+                  fontFamily: "SFProMedium",
+                  color: Colors.black,
+                }}
+                data={data}
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder="Earnings"
+                value={value}
+                onChange={(item) => {
+                  setValue(item.value);
+                }}
+                renderItem={renderItem}
+              />
+            </View>
+          </View>
+          <LineChart
+            data={{
+              labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+              datasets: [
+                {
+                  data: [
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                    Math.random() * 100,
+                  ],
+                },
+              ],
+            }}
+            width={Dimensions.get("window").width - 60}
+            withHorizontalLabels={false}
+            height={190}
+            renderDotContent={renderDotContent}
+            chartConfig={{
+              backgroundColor: "#e26a00",
+              backgroundGradientFrom: "#fff",
+              backgroundGradientTo: "#fff",
+              decimalPlaces: 2,
+              color: (opacity = 1) => `rgba(135,220,251, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(160, 162, 162, ${opacity})`,
+              propsForDots: {
+                r: "6",
+                strokeWidth: "2",
+                stroke: "#fff",
+              },
+              propsForLabels: {
+                fontSize: 12,
+                fontWeight: 500,
+              },
+              fillShadowGradient: "rgba(135, 220, 251,1)",
+              fillShadowGradientOpacity: 0.6,
+            }}
+            bezier
+            style={{
+              marginVertical: 8,
+              borderRadius: 16,
+              padding: 0,
+              borderColor: "#000",
+              paddingRight: 1,
+              paddingLeft: 20,
+            }}
+          />
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -63,6 +251,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    paddingHorizontal: 20,
     justifyContent: "flex-start",
     alignItems: "center",
     backgroundColor: "#EFEFEF",
@@ -82,7 +271,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
     borderColor: "#000",
-    paddingHorizontal: 15,
+    // paddingHorizontal: 15,
   },
   c2: {
     display: "flex",
@@ -90,7 +279,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: 20,
-    marginHorizontal: 15,
+    // marginHorizontal: 15,
     backgroundColor: "#fff",
     borderRadius: 40,
     padding: 3,

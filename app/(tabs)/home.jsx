@@ -108,7 +108,7 @@ export default function Home() {
     bottomSheetModalRef.current?.present();
   }, []);
 
-  const snapPoints = useMemo(() => ["39%", "78%"], []);
+  const snapPoints = useMemo(() => ["39%", "65%"], []);
 
   useEffect(() => {
     const getTransactions = async () => {

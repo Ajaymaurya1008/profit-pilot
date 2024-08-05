@@ -4,17 +4,13 @@
     "slug": "profit-pilot",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/logo.png",
+    "icon": "./assets/images/appLogo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
@@ -46,7 +42,7 @@
         "origin": false
       },
       "eas": {
-        "projectId": "51274aa3-0158-400c-9d5e-df6665fcb499"
+        "projectId": "fd5b45b8-3571-41a8-96af-7cf98ceef284"
       }
     }
   }
