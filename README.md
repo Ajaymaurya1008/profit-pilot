@@ -11,6 +11,10 @@ Profit Pilot is a mobile application built with Expo and React Native, designed 
   <img src="https://res.cloudinary.com/dfh7pmyj0/image/upload/v1722918811/BottomSheet_ehx5d5.jpg" alt="Transactions Screen" width="22%" />
 </div>
 
+## Demo Video
+
+[![Profit Pilot Demo](http://img.youtube.com/vi/92GZpvvvMUU/0.jpg)](https://youtu.be/92GZpvvvMUU)
+
 ## Getting Started
 
 To run this project locally:
