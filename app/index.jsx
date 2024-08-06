@@ -7,22 +7,24 @@ import * as SecureStore from "expo-secure-store";
 import { Redirect } from "expo-router";
 
 export default function index() {
+  // State to control whether to show splash screen or not
   const [isShowSplashScreen, setIsShowSplashScreen] = useState(null);
 
   useEffect(() => {
+    // Check if the app has been set up before
     const checkIsSet = async () => {
       const value = await SecureStore.getItemAsync("isSet");
-      console.log("value", value);
       setIsShowSplashScreen(value ? false : true);
-      // await SecureStore.deleteItemAsync("isSet");
     };
     checkIsSet();
   }, []);
 
+  // Show nothing while checking the setup status
   if (isShowSplashScreen === null) {
     return null;
   }
 
+  // Function to navigate to home and set the app as initialized
   const navigateHome = async () => {
     await SecureStore.setItemAsync("isSet", "true");
     router.push("home");
@@ -35,7 +37,9 @@ export default function index() {
           <View style={styles.Container}>
             <View style={styles.c1}>
               <Image
-                source={require("../assets/images/onBoarding.png")}
+                source={{
+                  uri: "https://res.cloudinary.com/dfh7pmyj0/image/upload/v1722924118/onBoarding_fbxfoc.png",
+                }}
                 style={styles.onBoardingImage}
               />
             </View>
@@ -84,7 +88,6 @@ const styles = new StyleSheet.create({
     height: "60%",
     width: "100%",
     borderColor: "#000",
-    // borderWidth: 5,
     zIndex: 0,
   },
   c2: {
@@ -95,7 +98,6 @@ const styles = new StyleSheet.create({
     marginHorizontal: 20,
     borderColor: "#000",
     gap: 15,
-    // borderWidth: 5,
     zIndex: 1,
     marginTop: -80,
   },
@@ -109,8 +111,6 @@ const styles = new StyleSheet.create({
   onBoardingImage: {
     width: "100%",
     height: "100%",
-    // borderColor: "#000",
-    // borderWidth: 5,
     resizeMode: "contain",
   },
   title: {
@@ -125,7 +125,6 @@ const styles = new StyleSheet.create({
     color: Colors.text,
     width: "100%",
     fontFamily: "SFProBold",
-    // fontWeight: "bold",
   },
   desc: {
     fontSize: 15,

@@ -22,11 +22,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { transactionData, cardData } from "../../constants/Data";
 import TransactionItem from "../../components/Home/TransactionItem";
 import Card from "../../components/Home/Card";
-import {
-  BottomSheetModal,
-  BottomSheetView,
-  BottomSheetTextInput,
-} from "@gorhom/bottom-sheet";
+import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 
@@ -90,10 +86,8 @@ export default function Home() {
       type: "Transfer",
       to: transaction.person,
     };
-    console.log(transactionItem);
     bottomSheetModalRef.current?.dismiss();
     let transactions = await SecureStore.getItemAsync("transactions");
-    console.log("string form", transactions);
     transactions = transactions && JSON.parse(transactions);
     const newTransactions = [transactionItem, ...transactions];
     await SecureStore.setItemAsync(
@@ -114,7 +108,6 @@ export default function Home() {
     const getTransactions = async () => {
       let transactions = await SecureStore.getItemAsync("transactions");
       transactions = JSON.parse(transactions);
-      console.log("transactions from expo", transactions);
       if (transactions === null || transactions.length === 0) {
         await SecureStore.setItemAsync(
           "transactions",
@@ -124,12 +117,11 @@ export default function Home() {
       } else {
         setPersistedData(transactions);
       }
-      // await SecureStore.deleteItemAsync("transactions");
     };
     getTransactions();
   }, []);
 
-  React.useEffect(() => {
+  useEffect(() => {
     let keyboardHideListener = Keyboard.addListener("keyboardDidHide", () => {
       if (isBottomSheetOpen.current) {
         bottomSheetModalRef.current?.snapToIndex(0);
@@ -154,7 +146,9 @@ export default function Home() {
         <View style={styles.c1}>
           <View style={styles.profile}>
             <Image
-              source={require("../../assets/images/user.png")}
+              source={{
+                uri: "https://res.cloudinary.com/dfh7pmyj0/image/upload/v1722924120/user_jy1r7e.png",
+              }}
               style={styles.logo}
             />
             <Text style={styles.profileText}>
@@ -213,7 +207,6 @@ export default function Home() {
           onDismiss={() => {
             isBottomSheetOpen.current = false;
           }}
-          // handleComponent={null
         >
           <BottomSheetView style={styles.bottomSheet}>
             <TextInput
