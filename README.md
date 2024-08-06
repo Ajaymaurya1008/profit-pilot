@@ -2,6 +2,13 @@
 
 Profit Pilot is a mobile application built with Expo and React Native, designed to help users manage their finances, track transactions, and visualize their spending habits.
 
+## App Preview
+
+![Home Screen](./assets/screenshots/Home.jpg)
+![Statistics Screen](./assets/screenshots/Stats.jpg)
+![Scanner Screen](./assets/screenshots/QR.jpg)
+![Transactions Screen](./assets/screenshots/BottomSheet.jpg)
+
 ## Getting Started
 
 To run this project locally:
