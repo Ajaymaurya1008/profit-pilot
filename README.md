@@ -4,10 +4,16 @@ Profit Pilot is a mobile application built with Expo and React Native, designed 
 
 ## App Preview
 
-![Home Screen](https://res.cloudinary.com/dfh7pmyj0/image/upload/v1722918812/Home_tmprrw.jpg)
-![Statistics Screen](https://res.cloudinary.com/dfh7pmyj0/image/upload/v1722918812/Stats_c2ezs8.jpg)
-![Scanner Screen](https://res.cloudinary.com/dfh7pmyj0/image/upload/v1722918814/QR_gs696r.jpg)
-![Transactions Screen](https://res.cloudinary.com/dfh7pmyj0/image/upload/v1722918811/BottomSheet_ehx5d5.jpg)
+<div style="display: flex; justify-content: space-between;">
+  <img src="https://res.cloudinary.com/dfh7pmyj0/image/upload/v1722918812/Home_tmprrw.jpg" alt="Home Screen" width="22%" />
+  <img src="https://res.cloudinary.com/dfh7pmyj0/image/upload/v1722918812/Stats_c2ezs8.jpg" alt="Statistics Screen" width="22%" />
+  <img src="https://res.cloudinary.com/dfh7pmyj0/image/upload/v1722918814/QR_gs696r.jpg" alt="Scanner Screen" width="22%" />
+  <img src="https://res.cloudinary.com/dfh7pmyj0/image/upload/v1722918811/BottomSheet_ehx5d5.jpg" alt="Transactions Screen" width="22%" />
+</div>
+
+## Demo Video
+
+[![Profit Pilot Demo](http://img.youtube.com/vi/92GZpvvvMUU/0.jpg)](https://youtu.be/92GZpvvvMUU)
 
 ## Getting Started
 
