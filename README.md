@@ -7,6 +7,11 @@ Profit Pilot is a mobile application built with Expo and React Native, designed 
 To run this project locally:
 
 1. Clone the repository
+
+   ```bash
+   git clone https://github.com/Ajaymaurya1008/profit-pilot.git
+   ```
+
 2. Install dependencies:
    ```bash
    npm install
@@ -83,4 +88,3 @@ The app uses a combination of inline styles and StyleSheet objects for consisten
 ## Contributing
 
 Contributions to Profit Pilot are welcome. Please ensure to follow the existing code style and add unit tests for any new features.
-
