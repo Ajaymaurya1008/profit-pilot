@@ -15,6 +15,7 @@ import { LineChart } from "react-native-chart-kit";
 import { Dropdown } from "react-native-element-dropdown";
 
 export default function Statistic() {
+  // State to control the selected month and value
   const [month, setMonth] = useState(1);
   const [value, setValue] = useState(0);
 
@@ -24,6 +25,7 @@ export default function Statistic() {
     { label: "Savings", value: "2" },
   ];
 
+  // Render the y axis values for the dot on the chart
   const renderDotContent = ({ x, y, index, indexData }) => {
     return (
       <View
@@ -41,6 +43,7 @@ export default function Statistic() {
     );
   };
 
+  // Render the dropdown options for the chart
   const renderItem = (item) => {
     return (
       <View style={styles.renderItemContainer}>

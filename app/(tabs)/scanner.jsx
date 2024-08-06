@@ -3,7 +3,6 @@ import {
   Text,
   View,
   StyleSheet,
-  Button,
   TouchableOpacity,
   Linking,
 } from "react-native";
@@ -13,14 +12,19 @@ import { BottomSheetModal, BottomSheetView } from "@gorhom/bottom-sheet";
 import { Colors } from "../../constants/Colors";
 
 export default function App() {
+  // State for camera permission, scan status, and scanned data
   const [hasPermission, setHasPermission] = useState(null);
   const [scanned, setScanned] = useState(false);
   const [scannedData, setScannedData] = useState("");
   const [link, setLink] = useState(null);
+
+  // Ref for the bottom sheet modal
   const bottomSheetModalRef = useRef(null);
 
+  // Array of snap points for the bottom sheet modal to snap to different positions
   const snapPoints = useMemo(() => ["39%"], []);
 
+  // Request camera permission and set state based on the result
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestCameraPermissionsAsync();
@@ -28,6 +32,7 @@ export default function App() {
     })();
   }, []);
 
+  // Extract links from the scanned data and set the link state
   const extractLink = (data) => {
     const urlRegex = /(https?:\/\/[^\s]+)/g;
     const urls = data.match(urlRegex);
@@ -42,6 +47,7 @@ export default function App() {
     bottomSheetModalRef.current?.present();
   }, []);
 
+  // Function to handle bar code scanned event, set the scanned state, extract links, and present the bottom sheet modal
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
     setScannedData(data);

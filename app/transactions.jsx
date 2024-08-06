@@ -6,16 +6,20 @@ import TransactionItem from "../components/Home/TransactionItem";
 import { useNavigation } from "expo-router";
 
 export default function Transactions() {
+  // State to store transaction data
   const [transactionData, setTransactionData] = useState([]);
-  const navigations = useNavigation();
+  const navigation = useNavigation();
 
   useEffect(() => {
+    // Function to fetch transactions from SecureStore
     const getTransactions = async () => {
       let transactions = await SecureStore.getItemAsync("transactions");
       setTransactionData(JSON.parse(transactions));
     };
     getTransactions();
-    navigations.setOptions({
+
+    // Set navigation options
+    navigation.setOptions({
       headerShown: true,
       headerTitle: "All Transactions",
     });

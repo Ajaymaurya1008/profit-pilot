@@ -27,6 +27,7 @@ import * as SecureStore from "expo-secure-store";
 import { router } from "expo-router";
 
 export default function Home() {
+  // State management for transaction, persisted data, and errors
   const [transaction, setTransaction] = useState({
     amount: "",
     person: "",
@@ -34,16 +35,20 @@ export default function Home() {
   });
   const [persistedData, setPersistedData] = useState([]);
   const [errors, setErrors] = useState({});
+
+  // Refs for bottom sheet modal and its open state
   const bottomSheetModalRef = useRef(null);
   const isBottomSheetOpen = useRef(false);
 
-  const handleChange = (name, value) => {
-    setTransaction({
-      ...transaction,
+  // Handle changes in transaction input fields
+  const handleChange = useCallback((name, value) => {
+    setTransaction((prev) => ({
+      ...prev,
       [name]: value,
-    });
-  };
+    }));
+  }, []);
 
+  // Validate transaction input fields
   const validate = () => {
     const newErrors = {};
     if (!transaction.amount) {
@@ -60,6 +65,7 @@ export default function Home() {
     return newErrors;
   };
 
+  // Format time for transaction display
   const formatTime = (date) => {
     let hours = date.getHours();
     const minutes = date.getMinutes();
@@ -70,6 +76,8 @@ export default function Home() {
     return hours + ":" + strMinutes + " " + ampm;
   };
 
+  // Handle sending money (creating a new transaction)
+  // Get Existing transactions from SecureStore and add new transaction
   const handleSendMoney = async () => {
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
@@ -86,7 +94,6 @@ export default function Home() {
       type: "Transfer",
       to: transaction.person,
     };
-    bottomSheetModalRef.current?.dismiss();
     let transactions = await SecureStore.getItemAsync("transactions");
     transactions = transactions && JSON.parse(transactions);
     const newTransactions = [transactionItem, ...transactions];
@@ -95,15 +102,20 @@ export default function Home() {
       JSON.stringify(newTransactions)
     );
     setPersistedData(newTransactions);
+    bottomSheetModalRef.current?.dismiss();
   };
 
+  // Present the bottom sheet modal when the button is pressed
   const handlePresentModalPress = useCallback(() => {
     isBottomSheetOpen.current = true;
     bottomSheetModalRef.current?.present();
   }, []);
 
+  // Array of snap points for the bottom sheet modal to snap to different positions
   const snapPoints = useMemo(() => ["39%", "65%"], []);
 
+  // Load persisted transactions on component mount and set state
+  // If there are no persisted transactions, set the state to the default transaction data
   useEffect(() => {
     const getTransactions = async () => {
       let transactions = await SecureStore.getItemAsync("transactions");
@@ -121,6 +133,8 @@ export default function Home() {
     getTransactions();
   }, []);
 
+
+  // Listen for keyboard events and snap the bottom sheet modal to the correct position
   useEffect(() => {
     let keyboardHideListener = Keyboard.addListener("keyboardDidHide", () => {
       if (isBottomSheetOpen.current) {
@@ -134,6 +148,7 @@ export default function Home() {
       }
     });
 
+    // Clean up listeners on component unmount
     return () => {
       keyboardHideListener.remove();
       keyboardShowListener.remove();
@@ -164,6 +179,10 @@ export default function Home() {
             data={cardData}
             renderItem={({ item }) => <Card item={item} full={false} />}
             horizontal={true}
+            initialNumToRender={10}
+            maxToRenderPerBatch={5}
+            windowSize={5}
+            removeClippedSubviews={true}
           />
         </View>
         <View style={styles.c3}>
@@ -198,6 +217,10 @@ export default function Home() {
             keyExtractor={(item) => item.id.toString()}
             scrollEnabled={true}
             showsVerticalScrollIndicator={false}
+            initialNumToRender={10}
+            maxToRenderPerBatch={5}
+            windowSize={5}
+            removeClippedSubviews={true}
           />
         </View>
         <BottomSheetModal
