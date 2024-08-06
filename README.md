@@ -1,50 +1,86 @@
-# Welcome to your Expo app 👋
+# Profit Pilot
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Profit Pilot is a mobile application built with Expo and React Native, designed to help users manage their finances, track transactions, and visualize their spending habits.
 
-## Get started
+## Getting Started
 
-1. Install dependencies
+To run this project locally:
 
+1. Clone the repository
+2. Install dependencies:
    ```bash
    npm install
    ```
-
-2. Start the app
-
+3. Start the Expo development server:
    ```bash
-    npx expo start
+   npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+## About the Project
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Profit Pilot is a comprehensive financial management app that provides users with tools to track their expenses, manage multiple accounts, and analyze their spending patterns. The app features a clean, modern UI with intuitive navigation and real-time updates.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Features
 
-## Get a fresh project
+- Multi-currency account management
+- Transaction tracking and categorization
+- QR code scanner for quick payments
+- Statistical analysis of spending habits
+- Secure local data storage
 
-When you're ready, run:
+## Libraries Used
 
-```bash
-npm run reset-project
-```
+- Expo
+- React Native
+- expo-router for navigation
+- @gorhom/bottom-sheet for modal interfaces
+- react-native-chart-kit for data visualization
+- expo-secure-store for secure local storage
+- lottie-react-native for animations
+- react-native-element-dropdown for dropdown components
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Project Structure
 
-## Learn more
+The project follows a typical Expo file structure:
 
-To learn more about developing your project with Expo, look at the following resources:
+- `app/`: Contains the main application screens and navigation setup
+- `components/`: Reusable React components
+- `constants/`: Application-wide constants and data
+- `assets/`: Images, fonts, and other static assets
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Key Components
 
-## Join the community
+### Card Component
 
-Join our community of developers creating universal apps.
+The Card component displays account information and balance. It accepts `item` and `full` props to customize its appearance.
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### TransactionItem Component
+
+This component renders individual transaction items in a list. It takes an `item` prop containing transaction details.
+
+## Screens
+
+### Home Screen
+
+The main dashboard screen displaying account overview and recent transactions.
+
+### Statistics Screen
+
+Provides graphical representation of user's financial data.
+
+### Scanner Screen
+
+Implements QR code scanning functionality for quick payments or information retrieval.
+
+## Data Management
+
+The app uses `expo-secure-store` for local data persistence. Transaction data is stored securely on the device.
+
+## Styling
+
+The app uses a combination of inline styles and StyleSheet objects for consistent styling across components.
+
+## Contributing
+
+Contributions to Profit Pilot are welcome. Please ensure to follow the existing code style and add unit tests for any new features.
+
