@@ -41,6 +41,15 @@ export const cardData = [
     validThru: "12/24",
     color: "#F3F3F3",
   },
+  {
+    id: "3",
+    currency: "Euro",
+    cardType: "Visa",
+    balance: 12345.67,
+    accountNumber: "**** 5678",
+    validThru: "12/24",
+    color: "#BBDABD",
+  },
 ];
 
 export const months = [

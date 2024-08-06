@@ -36,39 +36,15 @@ export default function Statistic() {
           alignItems: "center",
         }}
       >
-        <Text
-          style={{
-            color: Colors.black,
-            fontSize: 10,
-            fontFamily: "SFProMedium",
-          }}
-        >
-          ${indexData.toFixed(2)}
-        </Text>
+        <Text style={styles.renderDotContentText}>${indexData.toFixed(2)}</Text>
       </View>
     );
   };
 
   const renderItem = (item) => {
     return (
-      <View
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: 5,
-        }}
-      >
-        <Text
-          style={{
-            fontSize: 10,
-            fontFamily: "SFProMedium",
-            color: Colors.black,
-          }}
-        >
-          {item.label}
-        </Text>
+      <View style={styles.renderItemContainer}>
+        <Text style={styles.renderItemText}>{item.label}</Text>
       </View>
     );
   };
@@ -108,73 +84,14 @@ export default function Statistic() {
             keyExtractor={(item) => item.id.toString()}
           />
         </View>
-        <View
-          style={{
-            display: "flex",
-            alignItems: "center",
-            flexDirection: "column",
-            width: "100%",
-            backgroundColor: "#fff",
-            borderRadius: 16,
-            borderColor: "#000",
-            marginTop: 20,
-            marginHorizontal: 15,
-          }}
-        >
-          <View
-            style={{
-              display: "flex",
-              width: "100%",
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 20,
-                fontFamily: "SFProMedium",
-                color: Colors.black,
-                marginTop: 15,
-                marginLeft: 20,
-                marginBottom: 10,
-              }}
-            >
-              Transactions
-            </Text>
-            <View
-              style={{
-                backgroundColor: "#F6F6F6",
-                height: 30,
-                borderRadius: 25,
-                marginRight: 10,
-                marginTop: 10,
-                borderColor: "#000",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                paddingHorizontal: 10,
-              }}
-            >
+        <View style={styles.chartContainer}>
+          <View style={styles.chartHeader}>
+            <Text style={styles.chartHeaderText}>Transactions</Text>
+            <View style={styles.dropDownContainer}>
               <Dropdown
-                style={{
-                  height: 30,
-                  width: 65,
-                  fontSize: 8,
-                  fontFamily: "SFProMedium",
-                  borderRadius: 15,
-                  borderColor: "#000",
-                  alignItems: "center",
-                }}
-                placeholderStyle={{
-                  fontSize: 10,
-                  fontFamily: "SFProMedium",
-                  color: Colors.black,
-                }}
-                selectedTextStyle={{
-                  fontSize: 10,
-                  fontFamily: "SFProMedium",
-                  color: Colors.black,
-                }}
+                style={styles.dropDown}
+                placeholderStyle={styles.dropDownPlaceholder}
+                selectedTextStyle={styles.dropDownSelectedText}
                 data={data}
                 maxHeight={300}
                 labelField="label"
@@ -229,14 +146,7 @@ export default function Statistic() {
               fillShadowGradientOpacity: 0.6,
             }}
             bezier
-            style={{
-              marginVertical: 8,
-              borderRadius: 16,
-              padding: 0,
-              borderColor: "#000",
-              paddingRight: 1,
-              paddingLeft: 20,
-            }}
+            style={styles.chartKit}
           />
         </View>
       </View>
@@ -295,12 +205,97 @@ const styles = StyleSheet.create({
     height: 50,
     marginRight: 10,
     borderRadius: 50,
-    // borderWidth: 1,
     borderColor: "#000",
   },
   monthText: {
     fontSize: 12,
     fontFamily: "SFProMedium",
     color: "#CCD4DD",
+  },
+  renderDotContent: {
+    position: "absolute",
+    width: 40,
+    alignItems: "center",
+  },
+  renderDotContentText: {
+    color: Colors.black,
+    fontSize: 10,
+    fontFamily: "SFProMedium",
+  },
+  renderItemContainer: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: 5,
+  },
+  renderItemText: {
+    fontSize: 10,
+    fontFamily: "SFProMedium",
+    color: Colors.black,
+  },
+  chartContainer: {
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",
+    width: "100%",
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    borderColor: "#000",
+    marginTop: 20,
+    marginHorizontal: 15,
+  },
+  chartHeader: {
+    display: "flex",
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  chartHeaderText: {
+    fontSize: 20,
+    fontFamily: "SFProMedium",
+    color: Colors.black,
+    marginTop: 15,
+    marginLeft: 20,
+    marginBottom: 10,
+  },
+  dropDownContainer: {
+    backgroundColor: "#F6F6F6",
+    height: 30,
+    borderRadius: 25,
+    marginRight: 10,
+    marginTop: 10,
+    borderColor: "#000",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 10,
+  },
+  dropDown: {
+    height: 30,
+    width: 65,
+    fontSize: 8,
+    fontFamily: "SFProMedium",
+    borderRadius: 15,
+    borderColor: "#000",
+    alignItems: "center",
+  },
+  dropDownPlaceholder: {
+    fontSize: 10,
+    fontFamily: "SFProMedium",
+    color: Colors.black,
+  },
+  dropDownSelectedText: {
+    fontSize: 10,
+    fontFamily: "SFProMedium",
+    color: Colors.black,
+  },
+  chartKit: {
+    marginVertical: 8,
+    borderRadius: 16,
+    padding: 0,
+    borderColor: "#000",
+    paddingRight: 1,
+    paddingLeft: 20,
   },
 });
